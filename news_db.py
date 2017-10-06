@@ -1,3 +1,5 @@
+#!/usr/bin/env python2.7
+
 import psycopg2
 
 DBNAME = "news"
@@ -36,15 +38,14 @@ def error_report():
     c.execute("select to_char(time,'FMMonth DD, YYYY') as date, "
               "round((sum(case when status = '200 OK' "
               "then 0 else 1 end)::decimal / count(*)) * 100,2) "
-              "as percent_error from log group by date")
+              "as percent_error from log group by date "
+              "having (sum(case when status = '200 OK' "
+              "then 0 else 1 end)::decimal / count(*)) * 100 > 1")
     error_table = c.fetchall()
     db.close()
     print "\nDates on Which Over 1% of Requests Led to Errors:"
     for error in error_table:
-        if error[1] >= 1:
-            print str(error[0]) + " - " + str(error[1]) + "%"
-        else:
-            continue
+        print str(error[0]) + " - " + str(error[1]) + "%"
 
 article_rank()
 author_rank()
