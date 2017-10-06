@@ -54,7 +54,8 @@ def error_report():
     db.close()
     print "\nDates on Which Over 1% of Requests Led to Errors:"
     for error in error_table:
-        print str(error[0]) + " - " + str(error[1]) + "%"
+        if __name__ == '__main__':
+            print str(error[0]) + " - " + str(error[1]) + "%"
 
 article_rank()
 author_rank()
